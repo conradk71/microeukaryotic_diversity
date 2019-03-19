@@ -9,10 +9,21 @@ First, we will construct  an 18S rRNA gene database from the Protist Reference R
 More to be added over the weekend.
 
 ## Goals and Non-Goals
-To be discussed in depth on Sunday March 17th.
+Goals:
+* Determine proper files for database input files
+* Curate a well focussed database that can be used to efficiently target the “small eukaryotic fractions” that the study aims to identify
+  * Short Term
+* Create a pipeline to process data in mothur and output only relevant files for further downstream processing
+
 
 ## Milestones
-Will also be discussed and set out over the Sunday meeting.
+* Download the database by end of class on 3/19
+* Determine plans for processing of the database once downloaded
+  * File type
+  * Removal of extraneous data
+* Download all SRA data files from Searle et al.
+  * Using prefetch and fastqdump, retrieve all study data by end of class on 3/19 
+* Begin processing  
 
 ## Proposed Solution
 STEP 1: Format Files:
