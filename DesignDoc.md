@@ -24,7 +24,8 @@ Goals:
   * Removal of extraneous data
 * Download all SRA data files from Searle et al.
   * Using prefetch and fastqdump, retrieve all study data by end of class on 3/19 
-* Begin processing  
+* Begin processing
+* Test PR2 Database format for compatibility with mothur using a subset of sample data by end of week 3/26  
 
 ## Proposed Solution
 STEP 1: Format Files:
