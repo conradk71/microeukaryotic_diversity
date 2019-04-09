@@ -9,21 +9,23 @@ The composition and diversity of microeukaryotic communities in freshwater ecosy
 Amplicon data a vital tool for ecologists. By using 18S rRNA amplicon data, we will be able to carry out taxonomic
 classification and phylogenetic analysis of the microeukaryotic communities present in the Chicago near shore waters. While
 amplicon data is useful, it is important to keep in mind that this data should be used to inform/guide hypothesis and study
-aims rather than be a final answer. 
+aims rather than be a final answer.   
+
 ~~First, we will construct  an 18S rRNA gene database from the Protist Reference Ribosomal database (PR2) to be used in 
 mothur. The PR2 Database provides access to unicellular eukaryotic, Small SubUnit rRNA, and rDNA sequences with curated 
 taxonomy. The database is focused on nuclear-encoded sequences of protists. However, Metazoa, land plants and macrosporic 
 fungi, as well as eukaryotic organelles are also included because of their use in Next Generation Sequencing dataset analyses. 
 Since our study focuses around protists and small eukaryotic fractions, the database will be curated for this purpose. The 
 database will also have to be rewritten into the native languages mothur is written in, mainly C/C++, to be used for 
-downstream analysis.~~ 
+downstream analysis.~~   
+
 We will begin our analysis of the data using the tool mothur, following the MiSeq SOP. Mothur will screen the data for
 sequencing and PCR errors, process the improved sequences, and align them using the SILVA database. We are going to use the 
-18S rRNA accession for *Sacchromyces cerevisiae* and the primer sequences used in the study (EUK1181 (5′-TTA ATT TGA CTC AAC RCG GG-3′ & EUK1624 (5′-CGG GCG GTG TGT ACA AAG G-3′)) to trim the silva database for our desired regions of interest.
+18S rRNA accession for *Sacchromyces cerevisiae* and the primer sequences used in the study (EUK1181 (5′-TTA ATT TGA CTC AAC RCG GG-3′ & EUK1624 (5′-CGG GCG GTG TGT ACA AAG G-3′)) to trim the silva database for our desired regions of interest.  
 
-We will calculate alpha and beta diversities amongst other statistical analyses of the species’ diversity/density.
+We will calculate alpha and beta diversities amongst other statistical analyses of the species’ diversity/density.  
 
-Previously, research was conducted using eukaryotes analyzed from oil sands tailing ponds sediment and surface water. 
+Previously, research was conducted using eukaryotes analyzed from oil sands tailing ponds sediment and surface water.   
 
 
 ## Goals and Non-Goals
