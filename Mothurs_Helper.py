@@ -14,7 +14,7 @@ def download_references():
     os.system("gunzip pr2_version_4.11.1_mothur.tax.gz")
     os.system("wget https://www.mothur.org/w/images/9/98/Silva.bacteria.zip")
     os.system("unzip Silva.bacteria.zip")
-    
+
 def Preprocess(input_SRA):
     path = input("Please input the path to your local installation of SRA Toolkit")
     ##path = "~/sratoolkit.2.9.0-centos_linux64/bin/"
@@ -36,7 +36,7 @@ def Preprocess(input_SRA):
                 #subprocess.run(path + dump + line)
                 os.system(path + dump + line)
                 os.system()
-                #subprocess command is erroring out, however the exact system call it makes works fine when manually 
+                #subprocess command is erroring out, however the exact system call it makes works fine when manually
                 #inputted into the shell...need to figure this out
             else:
             #else, prefetch and fastq dump the file
@@ -87,11 +87,11 @@ def AlignPrimers(input_file):
                     results = tr_ambig(content[i])
                     results = list(results)
                     ambigs += results
-                  
+
     #append possible transcriptions to content list
     for i in range(len(ambigs)):
         content.append(ambigs[i])
-    #attempting to find primers 
+    #attempting to find primers
     fw=open("Scerevisiae.fasta",'w')
     for record in SeqIO.parse(inFile,'fasta'):
         if record.id == "NG_063315.1":
@@ -121,18 +121,21 @@ def run_mothur():
     #Here, we prepend the string we want to on first line
     oline.insert(0,fline)
     src.close()
-    #We again open the file in WRITE mode 
+    #We again open the file in WRITE mode
     src=open("stability.batch","w")
     src.writelines(oline)
     src.close()
-    os.system("./mothur stability.batch")
+    os.system("mothur stability.batch")
     
 def run_R_scripts():
     os.system("Rscript Dendro.R")
+def setup();
+    path = os.getcwd()
+    os.mkdir(path+'/Mothurs_Helper')
+    os.chdir(path+'/Mothurs_Helper')
+    path = os.getcwd()
 
-path = os.getcwd()
-os.mkdir(path+'/Mothurs_Helper')
-os.chdir(path+'/Mothurs_Helper')
+setup()
 path = os.getcwd()
 
 print("Do you want to run the Mothurs_Helper with Test data? \n")
@@ -157,4 +160,3 @@ if rscript == "y":
     run_R_scripts()
 else:
     print("Please change the working directory of your installation of R to the ~/Mothurs_Helper \n")
-
