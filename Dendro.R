@@ -1,3 +1,6 @@
+install.packages("vegan")
+library(vegan)
+
 dendata=read.delim("stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.opti_mcc.shared", row.names = 2)
 
 den2=t(dendata)
