@@ -1,0 +1,73 @@
+﻿#Creates a stability file that contains all the fastq from an input directory
+make.file(inputdir=., type=fastq, prefix=stability)
+#Beginning of reducing sequencing and PCR errors
+#Reads the forward and reverse fastq files to combine the reads of all the #samples. Allows the user to specify number of processors to use going forward
+make.contigs(file=stability.files, processors=16)
+#Outputs a summary table of the quality of the sequences
+summary.seqs(fasta=stability.trim.contigs.fasta)
+#Filters out the sequences for ambiguous bases and anything longer than 490 #base pairs
+screen.seqs(fasta=stability.trim.contigs.fasta, group=stability.contigs.groups, maxambig=0, maxlength=490)
+#Outputs a summary table, updating it with the latest quality of the sequences 
+summary.seqs(fasta=stability.trim.contigs.good.fasta)
+#Beginning of processed improved sequences
+#Filters the sequences for any duplicates
+unique.seqs(fasta=stability.trim.contigs.good.fasta)
+#Counts how many times a sequence appears in relation to the representative #sequence in the name file
+count.seqs(name=stability.trim.contigs.good.names, group=stability.contigs.good.groups)
+#Generates a summary table based on the output file provided from the previous #command
+summary.seqs(count=stability.trim.contigs.good.count_table)
+#Customize the alignment of the primer region of saccharomyces cerevisiae to #the reference silva database 
+align.seqs(fasta=scerevisiae_v7_v8.fasta, reference=silva.nr_v132.align)
+#Outputs a summary table of the alignment
+summary.seqs(fasta=scerevisiae_v7_v8.align)
+#Customizes the reference database to the region of interest. Start and end #positions can be found from the previous summary table generated
+pcr.seqs(fasta=silva.nr_v132.align, start=29689, end=42545, keepdots=FALSE)
+#Outputs a summary table of the region of interest
+summary.seqs(fasta=silva.nr_v132.pcr.align)
+#Aligns the sequences to the customized reference silva database
+align.seqs(fasta=stability.trim.contigs.good.unique.fasta, reference=silva.nr_v132.pcr.align)
+#Outputs a summary table of the alignment 
+summary.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table)
+#Filters out the sequences to make sure they all start at or before position 2 #and end at or before position 12856. The start and stop position can be found #from the summary table generated from the previous command
+screen.seqs(fasta=stability.trim.contigs.good.unique.align, count=stability.trim.contigs.good.count_table, summary=stability.trim.contigs.good.unique.summary, start=2, end=12856, maxhomop=8)
+
+
+
+
+
+
+#Outputs a summary table showing the sequences aligning at the same #coordinates
+summary.seqs(fasta=current, count=current)
+#Filters the sequences, eliminating overhangs at both ends
+filter.seqs(fasta=stability.trim.contigs.good.unique.good.align, vertical=T, trump=.)
+#Filters the sequences, removing any repetitions
+unique.seqs(fasta=stability.trim.contigs.good.unique.good.filter.fasta, count=stability.trim.contigs.good.good.count_table)
+#Filters sequences based on pyrosequencing errors
+pre.cluster(fasta=stability.trim.contigs.good.unique.good.filter.unique.fasta, count=stability.trim.contigs.good.unique.good.filter.count_table, diffs=4)
+#Removes chimeras using the VSEARCH algorithm from the count files
+chimera.vsearch(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t)
+#Removes the chimeras from the fasta file
+remove.seqs(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.accnos)
+#Output of the filtered sequences
+summary.seqs(fasta=current, count=current)
+#Classifies the sequences using the PR2 database as the reference. Note: the #original command uses the silva database for classification
+classify.seqs(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.count_table, reference=pr2_version_4.11.1_mothur.fasta, taxonomy=pr2_version_4.11.1_mothur.tax, cutoff=80)
+#Removes unwanted classified sequences
+remove.lineage(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.1_mothur.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Archaea-Bacteria)
+#Outputs an updated summary of the sequences
+summary.tax(taxonomy=current, count=current)
+#Beginning of preparing for analysis
+#Assigns sequences into OTUs. Used for large datasets 
+cluster.split(fasta=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.1_mothur.wang.pick.taxonomy, splitmethod=classify, taxlevel=4, cutoff=0.03)
+#Determines the number of sequences in each OTU using 0.03 as the cutoff #level
+make.shared(list=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.opti_mcc.list, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.count_table, label=0.03)
+#Determines the taxonomy for each OTU
+classify.otu(list=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.pick.opti_mcc.list, count=stability.trim.contigs.good.unique.good.filter.unique.precluster.denovo.vsearch.pick.pick.pick.count_table, taxonomy=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.1_mothur.wang.pick.taxonomy, label=0.03)
+#Counts the number of sequences in each sample
+count.groups(shared=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.opti_mcc.shared, size=30795)
+#Normalizes the data 
+sub.sample(shared=stability.opti_mcc.shared, size=30795)
+#Calculates the alpha diversity of the sequences
+rarefaction.single(shared=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.opti_mcc.shared, calc=sobs, freq=100)
+#Summary table of analyses including number of sequences, sample coverage, #number of observed OTUs, and Inverse Simpson
+summary.single(shared=stability.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.opti_mcc.shared, calc=nseqs-coverage-sobs-invsimpson, subsample=30795)
